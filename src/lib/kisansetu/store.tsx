@@ -205,7 +205,7 @@ export function KisansetuProvider({ children }: { children: ReactNode }) {
     (requestId: string) => {
       updateRequest(requestId, (req) => {
         const idx = STATUS_FLOW.indexOf(req.status);
-        const next = STATUS_FLOW[Math.min(idx + 1, STATUS_FLOW.length - 1)];
+        const next = STATUS_FLOW[Math.min(idx + 1, STATUS_FLOW.length - 1)]!;
         const patch: ProcurementRequest = { ...req, status: next };
         if (next === "WEIGHING" && !patch.actualWeight) {
           patch.actualWeight = Math.max(1, Math.round(req.quantity * 0.97));
@@ -218,7 +218,7 @@ export function KisansetuProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<StoreValue>(() => {
     const currentFarmer =
-      state.farmers.find((f) => f.farmerId === state.currentFarmerId) ?? state.farmers[0];
+      state.farmers.find((f) => f.farmerId === state.currentFarmerId) ?? state.farmers[0]!;
     return {
       state,
       currentFarmer,
