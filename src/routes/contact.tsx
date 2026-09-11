@@ -93,17 +93,17 @@ function Contact() {
           <div className="space-y-2">
             <Label htmlFor="name">Full name</Label>
             <Input id="name" name="name" maxLength={100} placeholder="Rajesh Kumar" />
-            {errors.name ? <p className="text-xs text-destructive">{errors.name}</p> : null}
+            {errors['name'] ? <p className="text-xs text-destructive">{errors['name']}</p> : null}
           </div>
           <div className="space-y-2">
             <Label htmlFor="mobile">Mobile number</Label>
             <Input id="mobile" name="mobile" maxLength={15} placeholder="9876543210" />
-            {errors.mobile ? <p className="text-xs text-destructive">{errors.mobile}</p> : null}
+            {errors['mobile'] ? <p className="text-xs text-destructive">{errors['mobile']}</p> : null}
           </div>
           <div className="space-y-2">
             <Label htmlFor="message">Your query</Label>
             <Textarea id="message" name="message" rows={5} maxLength={1000} placeholder="Tell us how we can help" />
-            {errors.message ? <p className="text-xs text-destructive">{errors.message}</p> : null}
+            {errors['message'] ? <p className="text-xs text-destructive">{errors['message']}</p> : null}
           </div>
           <Button type="submit" size="lg" className="w-full">
             Submit
