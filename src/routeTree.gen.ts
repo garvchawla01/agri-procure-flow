@@ -13,7 +13,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as CentresRouteImport } from './routes/centres'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as FarmerRouteImport } from './routes/farmer'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as FarmerIndexRouteImport } from './routes/farmer.index'
+import { Route as LoginFarmerRouteImport } from './routes/login.farmer'
+import { Route as LoginOfficerRouteImport } from './routes/login.officer'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -35,9 +39,29 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FarmerRoute = FarmerRouteImport.update({
+  id: '/farmer',
+  path: '/farmer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FarmerIndexRoute = FarmerIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FarmerRoute,
+} as any)
+const LoginFarmerRoute = LoginFarmerRouteImport.update({
+  id: '/login/farmer',
+  path: '/login/farmer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginOfficerRoute = LoginOfficerRouteImport.update({
+  id: '/login/officer',
+  path: '/login/officer',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -46,7 +70,11 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/centres': typeof CentresRoute
   '/contact': typeof ContactRoute
+  '/farmer': typeof FarmerRouteWithChildren
   '/how-it-works': typeof HowItWorksRoute
+  '/login/farmer': typeof LoginFarmerRoute
+  '/login/officer': typeof LoginOfficerRoute
+  '/farmer/': typeof FarmerIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +82,9 @@ export interface FileRoutesByTo {
   '/centres': typeof CentresRoute
   '/contact': typeof ContactRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/login/farmer': typeof LoginFarmerRoute
+  '/login/officer': typeof LoginOfficerRoute
+  '/farmer': typeof FarmerIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -61,14 +92,45 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/centres': typeof CentresRoute
   '/contact': typeof ContactRoute
+  '/farmer': typeof FarmerRouteWithChildren
   '/how-it-works': typeof HowItWorksRoute
+  '/login/farmer': typeof LoginFarmerRoute
+  '/login/officer': typeof LoginOfficerRoute
+  '/farmer/': typeof FarmerIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/centres' | '/contact' | '/how-it-works'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/centres'
+    | '/contact'
+    | '/farmer'
+    | '/how-it-works'
+    | '/login/farmer'
+    | '/login/officer'
+    | '/farmer/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/centres' | '/contact' | '/how-it-works'
-  id: '__root__' | '/' | '/about' | '/centres' | '/contact' | '/how-it-works'
+  to:
+    | '/'
+    | '/about'
+    | '/centres'
+    | '/contact'
+    | '/how-it-works'
+    | '/login/farmer'
+    | '/login/officer'
+    | '/farmer'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/centres'
+    | '/contact'
+    | '/farmer'
+    | '/how-it-works'
+    | '/login/farmer'
+    | '/login/officer'
+    | '/farmer/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,7 +138,10 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   CentresRoute: typeof CentresRoute
   ContactRoute: typeof ContactRoute
+  FarmerRoute: typeof FarmerRouteWithChildren
   HowItWorksRoute: typeof HowItWorksRoute
+  LoginFarmerRoute: typeof LoginFarmerRoute
+  LoginOfficerRoute: typeof LoginOfficerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -109,6 +174,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/farmer': {
+      id: '/farmer'
+      path: '/farmer'
+      fullPath: '/farmer'
+      preLoaderRoute: typeof FarmerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/how-it-works': {
       id: '/how-it-works'
       path: '/how-it-works'
@@ -116,15 +188,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HowItWorksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/farmer/': {
+      id: '/farmer/'
+      path: '/'
+      fullPath: '/farmer/'
+      preLoaderRoute: typeof FarmerIndexRouteImport
+      parentRoute: typeof FarmerRoute
+    }
+    '/login/farmer': {
+      id: '/login/farmer'
+      path: '/login/farmer'
+      fullPath: '/login/farmer'
+      preLoaderRoute: typeof LoginFarmerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login/officer': {
+      id: '/login/officer'
+      path: '/login/officer'
+      fullPath: '/login/officer'
+      preLoaderRoute: typeof LoginOfficerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
+
+interface FarmerRouteChildren {
+  FarmerIndexRoute: typeof FarmerIndexRoute
+}
+
+const FarmerRouteChildren: FarmerRouteChildren = {
+  FarmerIndexRoute: FarmerIndexRoute,
+}
+
+const FarmerRouteWithChildren =
+  FarmerRoute._addFileChildren(FarmerRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   CentresRoute: CentresRoute,
   ContactRoute: ContactRoute,
+  FarmerRoute: FarmerRouteWithChildren,
   HowItWorksRoute: HowItWorksRoute,
+  LoginFarmerRoute: LoginFarmerRoute,
+  LoginOfficerRoute: LoginOfficerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
