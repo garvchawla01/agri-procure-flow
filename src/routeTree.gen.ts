@@ -16,8 +16,13 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as FarmerRouteImport } from './routes/farmer'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as FarmerIndexRouteImport } from './routes/farmer.index'
+import { Route as FarmerNotificationsRouteImport } from './routes/farmer.notifications'
+import { Route as FarmerRequestRouteImport } from './routes/farmer.request'
+import { Route as FarmerScheduleRouteImport } from './routes/farmer.schedule'
+import { Route as FarmerTrackRouteImport } from './routes/farmer.track'
 import { Route as LoginFarmerRouteImport } from './routes/login.farmer'
 import { Route as LoginOfficerRouteImport } from './routes/login.officer'
+import { Route as FarmerTokenTokenRouteImport } from './routes/farmer.token.$token'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -54,6 +59,26 @@ const FarmerIndexRoute = FarmerIndexRouteImport.update({
   path: '/',
   getParentRoute: () => FarmerRoute,
 } as any)
+const FarmerNotificationsRoute = FarmerNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => FarmerRoute,
+} as any)
+const FarmerRequestRoute = FarmerRequestRouteImport.update({
+  id: '/request',
+  path: '/request',
+  getParentRoute: () => FarmerRoute,
+} as any)
+const FarmerScheduleRoute = FarmerScheduleRouteImport.update({
+  id: '/schedule',
+  path: '/schedule',
+  getParentRoute: () => FarmerRoute,
+} as any)
+const FarmerTrackRoute = FarmerTrackRouteImport.update({
+  id: '/track',
+  path: '/track',
+  getParentRoute: () => FarmerRoute,
+} as any)
 const LoginFarmerRoute = LoginFarmerRouteImport.update({
   id: '/login/farmer',
   path: '/login/farmer',
@@ -64,6 +89,11 @@ const LoginOfficerRoute = LoginOfficerRouteImport.update({
   path: '/login/officer',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FarmerTokenTokenRoute = FarmerTokenTokenRouteImport.update({
+  id: '/token/$token',
+  path: '/token/$token',
+  getParentRoute: () => FarmerRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -72,9 +102,14 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/farmer': typeof FarmerRouteWithChildren
   '/how-it-works': typeof HowItWorksRoute
+  '/farmer/notifications': typeof FarmerNotificationsRoute
+  '/farmer/request': typeof FarmerRequestRoute
+  '/farmer/schedule': typeof FarmerScheduleRoute
+  '/farmer/track': typeof FarmerTrackRoute
   '/login/farmer': typeof LoginFarmerRoute
   '/login/officer': typeof LoginOfficerRoute
   '/farmer/': typeof FarmerIndexRoute
+  '/farmer/token/$token': typeof FarmerTokenTokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -82,9 +117,14 @@ export interface FileRoutesByTo {
   '/centres': typeof CentresRoute
   '/contact': typeof ContactRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/farmer/notifications': typeof FarmerNotificationsRoute
+  '/farmer/request': typeof FarmerRequestRoute
+  '/farmer/schedule': typeof FarmerScheduleRoute
+  '/farmer/track': typeof FarmerTrackRoute
   '/login/farmer': typeof LoginFarmerRoute
   '/login/officer': typeof LoginOfficerRoute
   '/farmer': typeof FarmerIndexRoute
+  '/farmer/token/$token': typeof FarmerTokenTokenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -94,9 +134,14 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/farmer': typeof FarmerRouteWithChildren
   '/how-it-works': typeof HowItWorksRoute
+  '/farmer/notifications': typeof FarmerNotificationsRoute
+  '/farmer/request': typeof FarmerRequestRoute
+  '/farmer/schedule': typeof FarmerScheduleRoute
+  '/farmer/track': typeof FarmerTrackRoute
   '/login/farmer': typeof LoginFarmerRoute
   '/login/officer': typeof LoginOfficerRoute
   '/farmer/': typeof FarmerIndexRoute
+  '/farmer/token/$token': typeof FarmerTokenTokenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -107,9 +152,14 @@ export interface FileRouteTypes {
     | '/contact'
     | '/farmer'
     | '/how-it-works'
+    | '/farmer/notifications'
+    | '/farmer/request'
+    | '/farmer/schedule'
+    | '/farmer/track'
     | '/login/farmer'
     | '/login/officer'
     | '/farmer/'
+    | '/farmer/token/$token'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -117,9 +167,14 @@ export interface FileRouteTypes {
     | '/centres'
     | '/contact'
     | '/how-it-works'
+    | '/farmer/notifications'
+    | '/farmer/request'
+    | '/farmer/schedule'
+    | '/farmer/track'
     | '/login/farmer'
     | '/login/officer'
     | '/farmer'
+    | '/farmer/token/$token'
   id:
     | '__root__'
     | '/'
@@ -128,9 +183,14 @@ export interface FileRouteTypes {
     | '/contact'
     | '/farmer'
     | '/how-it-works'
+    | '/farmer/notifications'
+    | '/farmer/request'
+    | '/farmer/schedule'
+    | '/farmer/track'
     | '/login/farmer'
     | '/login/officer'
     | '/farmer/'
+    | '/farmer/token/$token'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -195,6 +255,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FarmerIndexRouteImport
       parentRoute: typeof FarmerRoute
     }
+    '/farmer/notifications': {
+      id: '/farmer/notifications'
+      path: '/notifications'
+      fullPath: '/farmer/notifications'
+      preLoaderRoute: typeof FarmerNotificationsRouteImport
+      parentRoute: typeof FarmerRoute
+    }
+    '/farmer/request': {
+      id: '/farmer/request'
+      path: '/request'
+      fullPath: '/farmer/request'
+      preLoaderRoute: typeof FarmerRequestRouteImport
+      parentRoute: typeof FarmerRoute
+    }
+    '/farmer/schedule': {
+      id: '/farmer/schedule'
+      path: '/schedule'
+      fullPath: '/farmer/schedule'
+      preLoaderRoute: typeof FarmerScheduleRouteImport
+      parentRoute: typeof FarmerRoute
+    }
+    '/farmer/track': {
+      id: '/farmer/track'
+      path: '/track'
+      fullPath: '/farmer/track'
+      preLoaderRoute: typeof FarmerTrackRouteImport
+      parentRoute: typeof FarmerRoute
+    }
     '/login/farmer': {
       id: '/login/farmer'
       path: '/login/farmer'
@@ -209,15 +297,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginOfficerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/farmer/token/$token': {
+      id: '/farmer/token/$token'
+      path: '/token/$token'
+      fullPath: '/farmer/token/$token'
+      preLoaderRoute: typeof FarmerTokenTokenRouteImport
+      parentRoute: typeof FarmerRoute
+    }
   }
 }
 
 interface FarmerRouteChildren {
+  FarmerNotificationsRoute: typeof FarmerNotificationsRoute
+  FarmerRequestRoute: typeof FarmerRequestRoute
+  FarmerScheduleRoute: typeof FarmerScheduleRoute
+  FarmerTrackRoute: typeof FarmerTrackRoute
   FarmerIndexRoute: typeof FarmerIndexRoute
+  FarmerTokenTokenRoute: typeof FarmerTokenTokenRoute
 }
 
 const FarmerRouteChildren: FarmerRouteChildren = {
+  FarmerNotificationsRoute: FarmerNotificationsRoute,
+  FarmerRequestRoute: FarmerRequestRoute,
+  FarmerScheduleRoute: FarmerScheduleRoute,
+  FarmerTrackRoute: FarmerTrackRoute,
   FarmerIndexRoute: FarmerIndexRoute,
+  FarmerTokenTokenRoute: FarmerTokenTokenRoute,
 }
 
 const FarmerRouteWithChildren =
