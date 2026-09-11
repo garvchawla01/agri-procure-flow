@@ -10,33 +10,245 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as CentresRouteImport } from './routes/centres'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as FarmerRouteImport } from './routes/farmer'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as OfficerRouteImport } from './routes/officer'
+import { Route as FarmerIndexRouteImport } from './routes/farmer.index'
+import { Route as FarmerNotificationsRouteImport } from './routes/farmer.notifications'
+import { Route as FarmerRequestRouteImport } from './routes/farmer.request'
+import { Route as FarmerScheduleRouteImport } from './routes/farmer.schedule'
+import { Route as FarmerTrackRouteImport } from './routes/farmer.track'
+import { Route as LoginFarmerRouteImport } from './routes/login.farmer'
+import { Route as LoginOfficerRouteImport } from './routes/login.officer'
+import { Route as OfficerIndexRouteImport } from './routes/officer.index'
+import { Route as OfficerRequestsRouteImport } from './routes/officer.requests'
+import { Route as OfficerScheduleRouteImport } from './routes/officer.schedule'
+import { Route as FarmerTokenTokenRouteImport } from './routes/farmer.token.$token'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CentresRoute = CentresRouteImport.update({
+  id: '/centres',
+  path: '/centres',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FarmerRoute = FarmerRouteImport.update({
+  id: '/farmer',
+  path: '/farmer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OfficerRoute = OfficerRouteImport.update({
+  id: '/officer',
+  path: '/officer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FarmerIndexRoute = FarmerIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FarmerRoute,
+} as any)
+const FarmerNotificationsRoute = FarmerNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => FarmerRoute,
+} as any)
+const FarmerRequestRoute = FarmerRequestRouteImport.update({
+  id: '/request',
+  path: '/request',
+  getParentRoute: () => FarmerRoute,
+} as any)
+const FarmerScheduleRoute = FarmerScheduleRouteImport.update({
+  id: '/schedule',
+  path: '/schedule',
+  getParentRoute: () => FarmerRoute,
+} as any)
+const FarmerTrackRoute = FarmerTrackRouteImport.update({
+  id: '/track',
+  path: '/track',
+  getParentRoute: () => FarmerRoute,
+} as any)
+const LoginFarmerRoute = LoginFarmerRouteImport.update({
+  id: '/login/farmer',
+  path: '/login/farmer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginOfficerRoute = LoginOfficerRouteImport.update({
+  id: '/login/officer',
+  path: '/login/officer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OfficerIndexRoute = OfficerIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OfficerRoute,
+} as any)
+const OfficerRequestsRoute = OfficerRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => OfficerRoute,
+} as any)
+const OfficerScheduleRoute = OfficerScheduleRouteImport.update({
+  id: '/schedule',
+  path: '/schedule',
+  getParentRoute: () => OfficerRoute,
+} as any)
+const FarmerTokenTokenRoute = FarmerTokenTokenRouteImport.update({
+  id: '/token/$token',
+  path: '/token/$token',
+  getParentRoute: () => FarmerRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/centres': typeof CentresRoute
+  '/contact': typeof ContactRoute
+  '/farmer': typeof FarmerRouteWithChildren
+  '/how-it-works': typeof HowItWorksRoute
+  '/officer': typeof OfficerRouteWithChildren
+  '/farmer/notifications': typeof FarmerNotificationsRoute
+  '/farmer/request': typeof FarmerRequestRoute
+  '/farmer/schedule': typeof FarmerScheduleRoute
+  '/farmer/track': typeof FarmerTrackRoute
+  '/login/farmer': typeof LoginFarmerRoute
+  '/login/officer': typeof LoginOfficerRoute
+  '/officer/requests': typeof OfficerRequestsRoute
+  '/officer/schedule': typeof OfficerScheduleRoute
+  '/farmer/': typeof FarmerIndexRoute
+  '/officer/': typeof OfficerIndexRoute
+  '/farmer/token/$token': typeof FarmerTokenTokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/centres': typeof CentresRoute
+  '/contact': typeof ContactRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/farmer/notifications': typeof FarmerNotificationsRoute
+  '/farmer/request': typeof FarmerRequestRoute
+  '/farmer/schedule': typeof FarmerScheduleRoute
+  '/farmer/track': typeof FarmerTrackRoute
+  '/login/farmer': typeof LoginFarmerRoute
+  '/login/officer': typeof LoginOfficerRoute
+  '/officer/requests': typeof OfficerRequestsRoute
+  '/officer/schedule': typeof OfficerScheduleRoute
+  '/farmer': typeof FarmerIndexRoute
+  '/officer': typeof OfficerIndexRoute
+  '/farmer/token/$token': typeof FarmerTokenTokenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/centres': typeof CentresRoute
+  '/contact': typeof ContactRoute
+  '/farmer': typeof FarmerRouteWithChildren
+  '/how-it-works': typeof HowItWorksRoute
+  '/officer': typeof OfficerRouteWithChildren
+  '/farmer/notifications': typeof FarmerNotificationsRoute
+  '/farmer/request': typeof FarmerRequestRoute
+  '/farmer/schedule': typeof FarmerScheduleRoute
+  '/farmer/track': typeof FarmerTrackRoute
+  '/login/farmer': typeof LoginFarmerRoute
+  '/login/officer': typeof LoginOfficerRoute
+  '/officer/requests': typeof OfficerRequestsRoute
+  '/officer/schedule': typeof OfficerScheduleRoute
+  '/farmer/': typeof FarmerIndexRoute
+  '/officer/': typeof OfficerIndexRoute
+  '/farmer/token/$token': typeof FarmerTokenTokenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/centres'
+    | '/contact'
+    | '/farmer'
+    | '/how-it-works'
+    | '/officer'
+    | '/farmer/notifications'
+    | '/farmer/request'
+    | '/farmer/schedule'
+    | '/farmer/track'
+    | '/login/farmer'
+    | '/login/officer'
+    | '/officer/requests'
+    | '/officer/schedule'
+    | '/farmer/'
+    | '/officer/'
+    | '/farmer/token/$token'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/centres'
+    | '/contact'
+    | '/how-it-works'
+    | '/farmer/notifications'
+    | '/farmer/request'
+    | '/farmer/schedule'
+    | '/farmer/track'
+    | '/login/farmer'
+    | '/login/officer'
+    | '/officer/requests'
+    | '/officer/schedule'
+    | '/farmer'
+    | '/officer'
+    | '/farmer/token/$token'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/centres'
+    | '/contact'
+    | '/farmer'
+    | '/how-it-works'
+    | '/officer'
+    | '/farmer/notifications'
+    | '/farmer/request'
+    | '/farmer/schedule'
+    | '/farmer/track'
+    | '/login/farmer'
+    | '/login/officer'
+    | '/officer/requests'
+    | '/officer/schedule'
+    | '/farmer/'
+    | '/officer/'
+    | '/farmer/token/$token'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  CentresRoute: typeof CentresRoute
+  ContactRoute: typeof ContactRoute
+  FarmerRoute: typeof FarmerRouteWithChildren
+  HowItWorksRoute: typeof HowItWorksRoute
+  OfficerRoute: typeof OfficerRouteWithChildren
+  LoginFarmerRoute: typeof LoginFarmerRoute
+  LoginOfficerRoute: typeof LoginOfficerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +260,174 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/centres': {
+      id: '/centres'
+      path: '/centres'
+      fullPath: '/centres'
+      preLoaderRoute: typeof CentresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/farmer': {
+      id: '/farmer'
+      path: '/farmer'
+      fullPath: '/farmer'
+      preLoaderRoute: typeof FarmerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/officer': {
+      id: '/officer'
+      path: '/officer'
+      fullPath: '/officer'
+      preLoaderRoute: typeof OfficerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/farmer/': {
+      id: '/farmer/'
+      path: '/'
+      fullPath: '/farmer/'
+      preLoaderRoute: typeof FarmerIndexRouteImport
+      parentRoute: typeof FarmerRoute
+    }
+    '/farmer/notifications': {
+      id: '/farmer/notifications'
+      path: '/notifications'
+      fullPath: '/farmer/notifications'
+      preLoaderRoute: typeof FarmerNotificationsRouteImport
+      parentRoute: typeof FarmerRoute
+    }
+    '/farmer/request': {
+      id: '/farmer/request'
+      path: '/request'
+      fullPath: '/farmer/request'
+      preLoaderRoute: typeof FarmerRequestRouteImport
+      parentRoute: typeof FarmerRoute
+    }
+    '/farmer/schedule': {
+      id: '/farmer/schedule'
+      path: '/schedule'
+      fullPath: '/farmer/schedule'
+      preLoaderRoute: typeof FarmerScheduleRouteImport
+      parentRoute: typeof FarmerRoute
+    }
+    '/farmer/track': {
+      id: '/farmer/track'
+      path: '/track'
+      fullPath: '/farmer/track'
+      preLoaderRoute: typeof FarmerTrackRouteImport
+      parentRoute: typeof FarmerRoute
+    }
+    '/login/farmer': {
+      id: '/login/farmer'
+      path: '/login/farmer'
+      fullPath: '/login/farmer'
+      preLoaderRoute: typeof LoginFarmerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login/officer': {
+      id: '/login/officer'
+      path: '/login/officer'
+      fullPath: '/login/officer'
+      preLoaderRoute: typeof LoginOfficerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/officer/': {
+      id: '/officer/'
+      path: '/'
+      fullPath: '/officer/'
+      preLoaderRoute: typeof OfficerIndexRouteImport
+      parentRoute: typeof OfficerRoute
+    }
+    '/officer/requests': {
+      id: '/officer/requests'
+      path: '/requests'
+      fullPath: '/officer/requests'
+      preLoaderRoute: typeof OfficerRequestsRouteImport
+      parentRoute: typeof OfficerRoute
+    }
+    '/officer/schedule': {
+      id: '/officer/schedule'
+      path: '/schedule'
+      fullPath: '/officer/schedule'
+      preLoaderRoute: typeof OfficerScheduleRouteImport
+      parentRoute: typeof OfficerRoute
+    }
+    '/farmer/token/$token': {
+      id: '/farmer/token/$token'
+      path: '/token/$token'
+      fullPath: '/farmer/token/$token'
+      preLoaderRoute: typeof FarmerTokenTokenRouteImport
+      parentRoute: typeof FarmerRoute
+    }
   }
 }
 
+interface FarmerRouteChildren {
+  FarmerNotificationsRoute: typeof FarmerNotificationsRoute
+  FarmerRequestRoute: typeof FarmerRequestRoute
+  FarmerScheduleRoute: typeof FarmerScheduleRoute
+  FarmerTrackRoute: typeof FarmerTrackRoute
+  FarmerIndexRoute: typeof FarmerIndexRoute
+  FarmerTokenTokenRoute: typeof FarmerTokenTokenRoute
+}
+
+const FarmerRouteChildren: FarmerRouteChildren = {
+  FarmerNotificationsRoute: FarmerNotificationsRoute,
+  FarmerRequestRoute: FarmerRequestRoute,
+  FarmerScheduleRoute: FarmerScheduleRoute,
+  FarmerTrackRoute: FarmerTrackRoute,
+  FarmerIndexRoute: FarmerIndexRoute,
+  FarmerTokenTokenRoute: FarmerTokenTokenRoute,
+}
+
+const FarmerRouteWithChildren =
+  FarmerRoute._addFileChildren(FarmerRouteChildren)
+
+interface OfficerRouteChildren {
+  OfficerRequestsRoute: typeof OfficerRequestsRoute
+  OfficerScheduleRoute: typeof OfficerScheduleRoute
+  OfficerIndexRoute: typeof OfficerIndexRoute
+}
+
+const OfficerRouteChildren: OfficerRouteChildren = {
+  OfficerRequestsRoute: OfficerRequestsRoute,
+  OfficerScheduleRoute: OfficerScheduleRoute,
+  OfficerIndexRoute: OfficerIndexRoute,
+}
+
+const OfficerRouteWithChildren =
+  OfficerRoute._addFileChildren(OfficerRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  CentresRoute: CentresRoute,
+  ContactRoute: ContactRoute,
+  FarmerRoute: FarmerRouteWithChildren,
+  HowItWorksRoute: HowItWorksRoute,
+  OfficerRoute: OfficerRouteWithChildren,
+  LoginFarmerRoute: LoginFarmerRoute,
+  LoginOfficerRoute: LoginOfficerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

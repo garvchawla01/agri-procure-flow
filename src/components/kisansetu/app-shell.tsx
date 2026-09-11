@@ -10,11 +10,13 @@ export function SidebarShell({
   items,
   title,
   subtitle,
+  notificationsTo = "/farmer/notifications",
   children,
 }: {
   items: NavItem[];
   title: string;
   subtitle?: string;
+  notificationsTo?: string;
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -24,7 +26,7 @@ export function SidebarShell({
       {items.map((item) => (
         <Link
           key={item.to}
-          to={item.to}
+          to={item.to as "/"}
           activeOptions={{ exact: true }}
           onClick={() => setOpen(false)}
           activeProps={{
@@ -77,7 +79,7 @@ export function SidebarShell({
             </div>
             <div className="flex items-center gap-2">
               <Button asChild variant="ghost" size="icon" aria-label="Notifications">
-                <Link to="/farmer/notifications">
+                <Link to={notificationsTo as "/"}>
                   <Bell className="size-5" />
                 </Link>
               </Button>
