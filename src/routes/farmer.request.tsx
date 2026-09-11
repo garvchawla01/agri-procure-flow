@@ -26,7 +26,7 @@ export const Route = createFileRoute("/farmer/request")({
       { property: "og:description", content: "Request a slot and get a digital token instantly." },
     ],
   }),
-  component: NewRequest;
+  component: NewRequest,
 });
 
 const schema = z.object({
