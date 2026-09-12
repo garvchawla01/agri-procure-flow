@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { KisansetuProvider } from "../lib/kisansetu/store";
+import { LanguageProvider } from "../lib/kisansetu/language-context";
 import { Toaster } from "../components/ui/sonner";
 
 function NotFoundComponent() {
@@ -97,23 +98,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Bitter:wght@400;600;700&family=Mukta:wght@400;500;600;700&display=swap",
       },
     ],
-    scripts: [
-      {
-        children: `
-          function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-              pageLanguage: 'en',
-              includedLanguages: 'hi,en',
-              autoDisplay: false
-            }, 'google_translate_element');
-          }
-        `,
-      },
-      {
-        src: "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit",
-        async: true,
-      },
-    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -126,16 +110,8 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
-        <style>{`
-          /* Hide Google Translate toolbar bar & tooltips */
-          .goog-te-banner-frame.skiptranslate, .goog-te-gadget-icon, .goog-te-menu-value span:nth-child(3), .goog-te-menu-value span:nth-child(5) { display: none !important; }
-          body { top: 0px !important; }
-          #google_translate_element { display: none !important; }
-          .skiptranslate iframe { display: none !important; }
-        `}</style>
       </head>
       <body>
-        <div id="google_translate_element" style={{ display: "none" }}></div>
         {children}
         <Scripts />
       </body>
@@ -148,10 +124,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <KisansetuProvider>
-        <Outlet />
-        <Toaster position="top-center" richColors />
-      </KisansetuProvider>
+      <LanguageProvider>
+        <KisansetuProvider>
+          <Outlet />
+          <Toaster position="top-center" richColors />
+        </KisansetuProvider>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }
