@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { KisansetuProvider } from "../lib/kisansetu/store";
+import { LanguageProvider } from "../lib/kisansetu/language-context";
 import { Toaster } from "../components/ui/sonner";
 
 function NotFoundComponent() {
@@ -134,11 +135,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <KisansetuProvider>
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
-        <Toaster position="top-center" richColors />
-      </KisansetuProvider>
+      <LanguageProvider>
+        <KisansetuProvider>
+          <Outlet />
+          <Toaster position="top-center" richColors />
+        </KisansetuProvider>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }

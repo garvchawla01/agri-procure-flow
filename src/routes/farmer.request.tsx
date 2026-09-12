@@ -88,6 +88,12 @@ function NewRequest() {
             // 1. Local state update for UI token generation
             const created = createRequest(parsed.data);
 
+            // Dynamic unique token generation (e.g. A100 to A999)
+            const dynamicToken = `A${Math.floor(100 + Math.random() * 900)}`;
+            if (created) {
+              created.token = dynamicToken;
+            }
+
             // 2. Supabase Cloud Database Insert
             const { error: dbError } = await supabase.from("slots").insert([
               {
@@ -98,7 +104,7 @@ function NewRequest() {
                 quantity_quintals: Number(parsed.data.quantity) / 100, // kg to quintals
                 booking_date: parsed.data.date,
                 time_slot: parsed.data.slot,
-                token_number: created.token,
+                token_number: dynamicToken,
                 status: "Booked",
               },
             ]);
@@ -107,10 +113,10 @@ function NewRequest() {
               console.error("Supabase Error:", dbError);
               toast.error(`Database Warning: ${dbError.message}`);
             } else {
-              toast.success(`Request saved to Cloud DB! Token ${created.token} generated.`);
+              toast.success(`Request saved to Cloud DB! Token ${dynamicToken} generated.`);
             }
 
-            navigate({ to: "/farmer/token/$token", params: { token: created.token } });
+            navigate({ to: "/farmer/token/$token", params: { token: dynamicToken } });
           } catch (err) {
             console.error("Submission failed:", err);
             toast.error("Failed to submit request. Check console for details.");

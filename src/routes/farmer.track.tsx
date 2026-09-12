@@ -51,17 +51,19 @@ function Track() {
     try {
       setLoading(true);
       setHasSearched(true);
-      const { data, error } = await supabase
+      
+      const { data: rows, error } = await supabase
         .from("slots")
         .select("*")
         .eq("token_number", cleanToken)
-        .maybeSingle();
+        .order("created_at", { ascending: false })
+        .limit(1);
 
       if (error) {
         console.error("Supabase error:", error);
         toast.error(`Error: ${error.message}`);
-      } else if (data) {
-        setSlotData(data as SupabaseSlot);
+      } else if (rows && rows.length > 0) {
+        setSlotData(rows[0] as SupabaseSlot);
         toast.success(`Token ${cleanToken} status fetched.`);
       } else {
         setSlotData(null);
