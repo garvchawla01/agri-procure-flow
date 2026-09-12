@@ -1,14 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { FastForward, RefreshCw, Search } from "lucide-react";
+import { Loader2, RefreshCw, Search } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PageHeading } from "@/components/kisansetu/app-shell";
 import { StatusBadge, StatusTimeline } from "@/components/kisansetu/status";
-import { useKisansetu } from "@/lib/kisansetu/store";
-import { STATUS_LABEL } from "@/lib/kisansetu/types";
+import { supabase } from "@/supabaseClient";
 
 export const Route = createFileRoute("/farmer/track")({
   head: () => ({
@@ -22,17 +21,83 @@ export const Route = createFileRoute("/farmer/track")({
   component: Track,
 });
 
+interface SupabaseSlot {
+  id: string;
+  farmer_name: string;
+  phone_number: string;
+  kisan_id: string;
+  crop_type: string;
+  quantity_quintals: number;
+  booking_date: string;
+  time_slot: string;
+  token_number: string;
+  status: string;
+  created_at: string;
+}
+
 function Track() {
-  const { findByToken, advanceStatus, farmerRequests } = useKisansetu();
-  const [input, setInput] = useState(farmerRequests[0]?.token ?? "A104");
-  const [query, setQuery] = useState(farmerRequests[0]?.token ?? "A104");
-  const request = findByToken(query);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [slotData, setSlotData] = useState<SupabaseSlot | null>(null);
+  const [hasSearched, setHasSearched] = useState(false);
+
+  const fetchStatus = async (tokenToSearch: string) => {
+    const cleanToken = tokenToSearch.trim();
+    if (!cleanToken) {
+      toast.error("Please enter a token number");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setHasSearched(true);
+      const { data, error } = await supabase
+        .from("slots")
+        .select("*")
+        .eq("token_number", cleanToken)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Supabase error:", error);
+        toast.error(`Error: ${error.message}`);
+      } else if (data) {
+        setSlotData(data as SupabaseSlot);
+        toast.success(`Token ${cleanToken} status fetched.`);
+      } else {
+        setSlotData(null);
+        toast.info("No slot found with this token number.");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to connect to Supabase");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initial load: fetch the latest slot created if available
+  useEffect(() => {
+    const getLatest = async () => {
+      const { data } = await supabase
+        .from("slots")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(1);
+
+      if (data && data.length > 0) {
+        setInput(data[0].token_number);
+        setSlotData(data[0] as SupabaseSlot);
+        setHasSearched(true);
+      }
+    };
+    getLatest();
+  }, []);
 
   return (
     <>
       <PageHeading
         title="Track Your Procurement"
-        description="Use the token printed on your procurement card, for example A104."
+        description="Enter your token number to fetch real-time status directly from the Cloud Database."
       />
 
       <div className="card-soft mb-6 flex flex-col gap-3 p-5 sm:flex-row sm:items-end">
@@ -43,37 +108,49 @@ function Track() {
             value={input}
             onChange={(e) => setInput(e.target.value.toUpperCase())}
             className="h-12 text-base font-semibold tracking-widest"
-            placeholder="A104"
-            maxLength={8}
+            placeholder="e.g. A101"
+            maxLength={12}
           />
         </div>
-        <Button size="lg" className="h-12" onClick={() => setQuery(input)}>
-          <Search className="size-4.5" /> Track
+        <Button
+          size="lg"
+          className="h-12"
+          disabled={loading}
+          onClick={() => fetchStatus(input)}
+        >
+          {loading ? <Loader2 className="size-4.5 animate-spin" /> : <Search className="size-4.5" />}
+          Track Status
         </Button>
       </div>
 
-      {!request ? (
-        <div className="card-soft p-8 text-center text-muted-foreground">
-          No procurement found for token <span className="font-semibold">{query}</span>. Try A104, A105 or A106.
+      {loading ? (
+        <div className="card-soft p-12 text-center text-muted-foreground">
+          <Loader2 className="mx-auto size-8 animate-spin text-primary" />
+          <p className="mt-3">Searching Supabase cloud database...</p>
         </div>
-      ) : (
+      ) : !slotData && hasSearched ? (
+        <div className="card-soft p-8 text-center text-muted-foreground">
+          No procurement request found for token <span className="font-semibold text-foreground">{input}</span>.
+        </div>
+      ) : slotData ? (
         <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
           <div className="card-soft p-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <p className="text-xs uppercase tracking-wider text-muted-foreground">Current status</p>
-                <p className="font-display text-2xl font-bold text-primary">{STATUS_LABEL[request.status]}</p>
+                <p className="font-display text-2xl font-bold text-primary">{slotData.status}</p>
               </div>
-              <StatusBadge status={request.status} />
+              <StatusBadge status={slotData.status as any} />
             </div>
 
             <dl className="mt-6 grid gap-4 sm:grid-cols-2">
               {[
-                ["Centre name", request.centre],
-                ["Token number", request.token],
-                ["Assigned slot", request.slot],
-                ["Crop & quantity", `${request.crop} · ${request.actualWeight ?? request.quantity} kg`],
-                ["Last updated", new Date(request.updatedAt).toLocaleString("en-IN")],
+                ["Farmer Name", slotData.farmer_name],
+                ["Token number", slotData.token_number],
+                ["Assigned Slot", slotData.time_slot],
+                ["Date", slotData.booking_date],
+                ["Crop & Quantity", `${slotData.crop_type} · ${(slotData.quantity_quintals ?? 0) * 100} kg`],
+                ["Kisan ID / Phone", slotData.kisan_id || slotData.phone_number],
               ].map(([k, v]) => (
                 <div key={k} className="rounded-xl bg-secondary/60 p-3">
                   <dt className="text-xs uppercase tracking-wider text-muted-foreground">{k}</dt>
@@ -86,29 +163,20 @@ function Track() {
               <Button
                 variant="outline"
                 size="lg"
-                onClick={() => toast.success("Status refreshed just now.")}
+                onClick={() => fetchStatus(slotData.token_number)}
+                disabled={loading}
               >
-                <RefreshCw className="size-4.5" /> Refresh Status
-              </Button>
-              <Button
-                variant="secondary"
-                size="lg"
-                onClick={() => {
-                  advanceStatus(request.requestId);
-                  toast.success("Demo: procurement moved to the next step.");
-                }}
-              >
-                <FastForward className="size-4.5" /> Simulate Next Step
+                <RefreshCw className="size-4.5 mr-2" /> Refresh Status
               </Button>
             </div>
           </div>
 
           <div className="card-soft p-6">
             <h3 className="mb-5 font-display text-lg font-bold text-primary">Procurement timeline</h3>
-            <StatusTimeline status={request.status} />
+            <StatusTimeline status={slotData.status as any} />
           </div>
         </div>
-      )}
+      ) : null}
     </>
   );
 }

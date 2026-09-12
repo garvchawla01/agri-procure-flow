@@ -16,6 +16,7 @@ import {
 import { PageHeading } from "@/components/kisansetu/app-shell";
 import { useKisansetu } from "@/lib/kisansetu/store";
 import { CROPS, SLOTS } from "@/lib/kisansetu/types";
+import { supabase } from "@/supabaseClient";
 
 export const Route = createFileRoute("/farmer/request")({
   head: () => ({
@@ -58,7 +59,7 @@ function NewRequest() {
 
       <form
         className="card-soft max-w-3xl space-y-5 p-6 sm:p-8"
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
           const form = new FormData(e.currentTarget);
           const parsed = schema.safeParse({
@@ -71,6 +72,7 @@ function NewRequest() {
             contact: String(form.get("contact") ?? ""),
             slot,
           });
+
           if (!parsed.success) {
             const next: Record<string, string> = {};
             for (const issue of parsed.error.issues) next[String(issue.path[0])] = issue.message;
@@ -78,25 +80,55 @@ function NewRequest() {
             toast.error("Please correct the highlighted fields.");
             return;
           }
+
           setErrors({});
           setSubmitting(true);
-          const created = createRequest(parsed.data);
-          setTimeout(() => {
-            toast.success(`Request submitted successfully. Token ${created.token} generated.`);
+
+          try {
+            // 1. Local state update for UI token generation
+            const created = createRequest(parsed.data);
+
+            // 2. Supabase Cloud Database Insert
+            const { error: dbError } = await supabase.from("slots").insert([
+              {
+                farmer_name: parsed.data.farmerName,
+                kisan_id: parsed.data.farmerId,
+                phone_number: parsed.data.contact,
+                crop_type: parsed.data.crop,
+                quantity_quintals: Number(parsed.data.quantity) / 100, // kg to quintals
+                booking_date: parsed.data.date,
+                time_slot: parsed.data.slot,
+                token_number: created.token,
+                status: "Booked",
+              },
+            ]);
+
+            if (dbError) {
+              console.error("Supabase Error:", dbError);
+              toast.error(`Database Warning: ${dbError.message}`);
+            } else {
+              toast.success(`Request saved to Cloud DB! Token ${created.token} generated.`);
+            }
+
             navigate({ to: "/farmer/token/$token", params: { token: created.token } });
-          }, 600);
+          } catch (err) {
+            console.error("Submission failed:", err);
+            toast.error("Failed to submit request. Check console for details.");
+          } finally {
+            setSubmitting(false);
+          }
         }}
       >
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="farmerName">Farmer name</Label>
             <Input id="farmerName" name="farmerName" defaultValue={currentFarmer.name} className="h-12" maxLength={100} />
-            {errors['farmerName'] ? <p className="text-xs text-destructive">{errors['farmerName']}</p> : null}
+            {errors["farmerName"] ? <p className="text-xs text-destructive">{errors["farmerName"]}</p> : null}
           </div>
           <div className="space-y-2">
             <Label htmlFor="farmerId">Farmer ID</Label>
             <Input id="farmerId" name="farmerId" defaultValue={currentFarmer.farmerId} className="h-12" maxLength={20} />
-            {errors['farmerId'] ? <p className="text-xs text-destructive">{errors['farmerId']}</p> : null}
+            {errors["farmerId"] ? <p className="text-xs text-destructive">{errors["farmerId"]}</p> : null}
           </div>
 
           <div className="space-y-2">
@@ -117,7 +149,7 @@ function NewRequest() {
           <div className="space-y-2">
             <Label htmlFor="quantity">Expected quantity (kg)</Label>
             <Input id="quantity" name="quantity" inputMode="numeric" placeholder="250" className="h-12" />
-            {errors['quantity'] ? <p className="text-xs text-destructive">{errors['quantity']}</p> : null}
+            {errors["quantity"] ? <p className="text-xs text-destructive">{errors["quantity"]}</p> : null}
           </div>
 
           <div className="space-y-2">
@@ -138,7 +170,7 @@ function NewRequest() {
           <div className="space-y-2">
             <Label htmlFor="date">Preferred date</Label>
             <Input id="date" name="date" type="date" defaultValue="2026-09-12" className="h-12" />
-            {errors['date'] ? <p className="text-xs text-destructive">{errors['date']}</p> : null}
+            {errors["date"] ? <p className="text-xs text-destructive">{errors["date"]}</p> : null}
           </div>
 
           <div className="space-y-2">
@@ -159,7 +191,7 @@ function NewRequest() {
           <div className="space-y-2">
             <Label htmlFor="contact">Contact number</Label>
             <Input id="contact" name="contact" defaultValue={currentFarmer.mobile} className="h-12" maxLength={10} />
-            {errors['contact'] ? <p className="text-xs text-destructive">{errors['contact']}</p> : null}
+            {errors["contact"] ? <p className="text-xs text-destructive">{errors["contact"]}</p> : null}
           </div>
         </div>
 
