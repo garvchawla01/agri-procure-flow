@@ -108,7 +108,7 @@ export function SiteFooter() {
               <Link to="/officer">Officer Dashboard</Link>
             </li>
             <li>
-              <Link to="/admin">Admin Dashboard</Link>
+              <a href="/admin">Admin Dashboard</a>
             </li>
             <li>
               <Link to="/centres">Procurement Centres</Link>
