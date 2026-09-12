@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { PublicLayout, Section, SectionTitle } from "@/components/kisansetu/public-layout";
 import heroImage from "@/assets/hero-farmer.jpg";
+import { useTranslation } from "@/lib/kisansetu/language-context";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -38,78 +39,155 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const problems = [
-  {
-    icon: Clock,
-    title: "Long Waiting Times",
-    body: "Farmers wait for hours, sometimes days, outside procurement centres with no queue order.",
-  },
-  {
-    icon: HelpCircle,
-    title: "No Schedule Information",
-    body: "Procurement dates and centre capacity are rarely communicated to farmers in advance.",
-  },
-  {
-    icon: Radio,
-    title: "Uncertain Procurement Status",
-    body: "After handing over the crop, farmers have no way to know weighing, verification or payment progress.",
-  },
-];
-
-const solutions = [
-  { icon: QrCode, title: "Digital Token", body: "Every request receives a unique QR token that identifies the farmer at the centre." },
-  { icon: CalendarClock, title: "Smart Slot Allocation", body: "Slots are assigned by centre capacity, so farmers arrive only when their turn is due." },
-  { icon: Radio, title: "Live Status Tracking", body: "Follow every stage from token generation to payment initiation in real time." },
-  { icon: ShieldCheck, title: "Transparent Procurement", body: "Weight, verification and payment records stay visible to both farmer and officer." },
-];
-
-const steps = [
-  { icon: ClipboardList, title: "Request", body: "Farmer submits crop, quantity and preferred date." },
-  { icon: QrCode, title: "Token Generated", body: "A unique token such as A104 is created instantly." },
-  { icon: CalendarClock, title: "Slot Assigned", body: "System allots a one-hour arrival slot." },
-  { icon: Truck, title: "Reach Centre", body: "Token is scanned on arrival at the centre." },
-  { icon: Scale, title: "Weighing", body: "Officer records the actual weight of the produce." },
-  { icon: IndianRupee, title: "Verification & Payment", body: "Documents verified and payment initiated." },
-];
-
-const benefits = [
-  "Reduced waiting time at centres",
-  "Better planning for farmers and centres",
-  "Real-time status updates",
-  "Full transparency of weight and payment",
-  "Fair and organised procurement queue",
-  "Improved procurement officer efficiency",
-];
-
 function Home() {
+  const { language, t } = useTranslation();
+  const isHi = language === "hi";
+
+  const problems = [
+    {
+      icon: Clock,
+      title: isHi ? "लंबे इंतजार का समय" : "Long Waiting Times",
+      body: isHi
+        ? "किसान बिना किसी कतार व्यवस्था के खरीद केंद्रों के बाहर घंटों और कई बार दिनों तक इंतजार करते हैं।"
+        : "Farmers wait for hours, sometimes days, outside procurement centres with no queue order.",
+    },
+    {
+      icon: HelpCircle,
+      title: isHi ? "शेड्यूल की जानकारी का अभाव" : "No Schedule Information",
+      body: isHi
+        ? "खरीद की तारीखें और केंद्र की दैनिक क्षमता की जानकारी किसानों को पहले से नहीं मिल पाती।"
+        : "Procurement dates and centre capacity are rarely communicated to farmers in advance.",
+    },
+    {
+      icon: Radio,
+      title: isHi ? "अनिश्चित खरीद स्थिति" : "Uncertain Procurement Status",
+      body: isHi
+        ? "फसल सौंपने के बाद वजन, दस्तावेज सत्यापन या भुगतान की स्थिति जानने का कोई आसान तरीका नहीं होता।"
+        : "After handing over the crop, farmers have no way to know weighing, verification or payment progress.",
+    },
+  ];
+
+  const solutions = [
+    {
+      icon: QrCode,
+      title: isHi ? "डिजिटल टोकन" : "Digital Token",
+      body: isHi
+        ? "हर अनुरोध पर एक विशिष्ट क्यूआर टोकन मिलता है जो केंद्र पर किसान की त्वरित पहचान करता है।"
+        : "Every request receives a unique QR token that identifies the farmer at the centre.",
+    },
+    {
+      icon: CalendarClock,
+      title: isHi ? "स्मार्ट स्लॉट आवंटन" : "Smart Slot Allocation",
+      body: isHi
+        ? "केंद्र की क्षमता के अनुसार स्लॉट दिए जाते हैं, जिससे किसान अपनी बारी आने पर ही पहुंचें।"
+        : "Slots are assigned by centre capacity, so farmers arrive only when their turn is due.",
+    },
+    {
+      icon: Radio,
+      title: isHi ? "लाइव स्टेटस ट्रैकिंग" : "Live Status Tracking",
+      body: isHi
+        ? "टोकन बनने से लेकर भुगतान शुरू होने तक के प्रत्येक चरण को रियल-टाइम में ट्रैक करें।"
+        : "Follow every stage from token generation to payment initiation in real time.",
+    },
+    {
+      icon: ShieldCheck,
+      title: isHi ? "पारदर्शी खरीद प्रक्रिया" : "Transparent Procurement",
+      body: isHi
+        ? "वजन, सत्यापन और भुगतान का पूरा रिकॉर्ड किसान और अधिकारी दोनों के लिए सुलभ रहता है।"
+        : "Weight, verification and payment records stay visible to both farmer and officer.",
+    },
+  ];
+
+  const steps = [
+    {
+      icon: ClipboardList,
+      title: isHi ? "अनुरोध दर्ज करें" : "Request",
+      body: isHi
+        ? "किसान फसल का प्रकार, मात्रा और पसंदीदा तारीख दर्ज करते हैं।"
+        : "Farmer submits crop, quantity and preferred date.",
+    },
+    {
+      icon: QrCode,
+      title: isHi ? "टोकन निर्माण" : "Token Generated",
+      body: isHi
+        ? "तुरंत एक डिजिटल टोकन (जैसे A104) जारी हो जाता है।"
+        : "A unique token such as A104 is created instantly.",
+    },
+    {
+      icon: CalendarClock,
+      title: isHi ? "स्लॉट आवंटन" : "Slot Assigned",
+      body: isHi
+        ? "प्रणाली केंद्र पर आगमन के लिए एक घंटे का निश्चित स्लॉट देती है।"
+        : "System allots a one-hour arrival slot.",
+    },
+    {
+      icon: Truck,
+      title: isHi ? "केंद्र पर आगमन" : "Reach Centre",
+      body: isHi
+        ? "केंद्र पर पहुंचते ही डिजिटल टोकन स्कैन किया जाता है।"
+        : "Token is scanned on arrival at the centre.",
+    },
+    {
+      icon: Scale,
+      title: isHi ? "वजन और जांच" : "Weighing",
+      body: isHi
+        ? "अधिकारी द्वारा फसल का वास्तविक वजन दर्ज किया जाता है।"
+        : "Officer records the actual weight of the produce.",
+    },
+    {
+      icon: IndianRupee,
+      title: isHi ? "सत्यापन एवं भुगतान" : "Verification & Payment",
+      body: isHi
+        ? "दस्तावेजों की जांच पूरी होते ही सीधा बैंक भुगतान शुरू होता है।"
+        : "Documents verified and payment initiated.",
+    },
+  ];
+
+  const benefits = isHi
+    ? [
+        "खरीद केंद्रों पर कतार और इंतजार में भारी कमी",
+        "किसानों और केंद्रों दोनों के लिए बेहतर पूर्व-नियोजन",
+        "रियल-टाइम में खरीद प्रक्रिया की जानकारी",
+        "तौल (वजन) और भुगतान में पूर्ण पारदर्शिता",
+        "निष्पक्ष और डिजिटल रूप से व्यवस्थित कतार",
+        "खरीद अधिकारियों की कार्यक्षमता में वृद्धि",
+      ]
+    : [
+        "Reduced waiting time at centres",
+        "Better planning for farmers and centres",
+        "Real-time status updates",
+        "Full transparency of weight and payment",
+        "Fair and organised procurement queue",
+        "Improved procurement officer efficiency",
+      ];
+
   return (
     <PublicLayout>
       <div className="field-pattern border-b border-border">
         <Section className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-gold/50 bg-gold/15 px-3 py-1 text-xs font-semibold text-primary">
-              <Sprout className="size-3.5" /> Connecting Farmers to Fair &amp; Transparent Procurement
+              <Sprout className="size-3.5" /> {t.heroBadge}
             </span>
             <h1 className="mt-5 font-display text-4xl font-bold leading-tight text-primary sm:text-5xl">
-              Smart Procurement. Less Waiting. More Transparency.
+              {t.heroTitle1} {t.heroTitle2} {t.heroTitle3}
             </h1>
             <p className="mt-5 max-w-xl text-lg text-muted-foreground">
-              KISANSETU connects farmers with procurement centres through digital scheduling, token-based
-              tracking and real-time status updates.
+              {t.heroDesc}
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg" className="h-13 text-base">
-                <Link to="/farmer/request">Start Procurement Request</Link>
+                <Link to="/farmer/request">{t.btnStartRequest}</Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="h-13 text-base">
-                <Link to="/farmer/track">Track My Procurement</Link>
+                <Link to="/farmer/track">{t.btnTrackProcurement}</Link>
               </Button>
             </div>
             <div className="mt-8 grid max-w-md grid-cols-3 gap-4 text-center">
               {[
-                { k: "650", v: "Farmers served" },
-                { k: "4", v: "Procurement centres" },
-                { k: "85%", v: "Less waiting" },
+                { k: "650", v: t.statFarmersServed },
+                { k: "4", v: t.statCentres },
+                { k: "85%", v: t.statLessWaiting },
               ].map((s) => (
                 <div key={s.v}>
                   <p className="font-display text-xl font-bold text-accent">{s.k}</p>
@@ -127,9 +205,13 @@ function Home() {
               className="w-full rounded-3xl border border-border object-cover shadow-[var(--shadow-raised)]"
             />
             <div className="card-soft absolute -bottom-6 left-4 hidden w-56 p-4 sm:block">
-              <p className="text-xs font-medium text-muted-foreground">Your token</p>
+              <p className="text-xs font-medium text-muted-foreground">
+                {isHi ? "आपका टोकन" : "Your token"}
+              </p>
               <p className="font-display text-3xl font-bold text-primary">A104</p>
-              <p className="mt-1 text-xs text-accent">Slot 10:00 AM – 11:00 AM</p>
+              <p className="mt-1 text-xs text-accent">
+                {isHi ? "स्लॉट सुबह 10:00 – 11:00" : "Slot 10:00 AM – 11:00 AM"}
+              </p>
             </div>
           </div>
         </Section>
@@ -137,9 +219,13 @@ function Home() {
 
       <Section>
         <SectionTitle
-          eyebrow="The problem"
-          title="Procurement today is slow and unclear"
-          description="Farmers lose time and income to queues and missing information."
+          eyebrow={isHi ? "समस्या" : "The problem"}
+          title={isHi ? "पारंपरिक खरीद प्रणाली धीमी और अनिश्चित है" : "Procurement today is slow and unclear"}
+          description={
+            isHi
+              ? "लंबी कतारों और समय पर जानकारी न मिलने से किसानों का समय और धन दोनों नष्ट होते हैं।"
+              : "Farmers lose time and income to queues and missing information."
+          }
         />
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {problems.map((p) => (
@@ -156,7 +242,10 @@ function Home() {
 
       <div className="border-y border-border bg-secondary/60">
         <Section>
-          <SectionTitle eyebrow="The solution" title="One digital bridge from farm to centre" />
+          <SectionTitle
+            eyebrow={isHi ? "समाधान" : "The solution"}
+            title={isHi ? "खेत से खरीद केंद्र तक का डिजिटल सेतु" : "One digital bridge from farm to centre"}
+          />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {solutions.map((s) => (
               <div key={s.title} className="card-soft p-6">
@@ -172,7 +261,10 @@ function Home() {
       </div>
 
       <Section id="how-it-works">
-        <SectionTitle eyebrow="How it works" title="Six simple steps" />
+        <SectionTitle
+          eyebrow={isHi ? "कार्यप्रणाली" : "How it works"}
+          title={isHi ? "छह सरल चरण" : "Six simple steps"}
+        />
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {steps.map((s, i) => (
             <div key={s.title} className="card-soft relative p-6">
@@ -189,7 +281,11 @@ function Home() {
         </div>
         <div className="mt-8 flex items-center justify-center gap-3 rounded-2xl border border-success/30 bg-success/10 p-5 text-center">
           <BadgeCheck className="size-6 text-success" />
-          <p className="font-semibold text-success">Procurement Completed — payment initiated to the farmer.</p>
+          <p className="font-semibold text-success">
+            {isHi
+              ? "खरीद प्रक्रिया पूर्ण — किसान के खाते में भुगतान शुरू।"
+              : "Procurement Completed — payment initiated to the farmer."}
+          </p>
         </div>
       </Section>
 
@@ -198,9 +294,17 @@ function Home() {
           <div className="grid gap-10 lg:grid-cols-2">
             <SectionTitle
               center={false}
-              eyebrow="Benefits"
-              title="Value for farmers, officers and administrators"
-              description="KISANSETU turns an unpredictable day at the mandi into a scheduled, traceable process."
+              eyebrow={isHi ? "लाभ" : "Benefits"}
+              title={
+                isHi
+                  ? "किसानों, अधिकारियों और प्रशासकों के लिए उपयोगी"
+                  : "Value for farmers, officers and administrators"
+              }
+              description={
+                isHi
+                  ? "किसानसेतु मंडी की अनिश्चित व्यवस्था को एक समयबद्ध और पारदर्शी प्रक्रिया में बदलता है।"
+                  : "KISANSETU turns an unpredictable day at the mandi into a scheduled, traceable process."
+              }
             />
             <ul className="grid gap-3 sm:grid-cols-2">
               {benefits.map((b) => (
@@ -217,12 +321,16 @@ function Home() {
       <Section>
         <div className="rounded-3xl bg-primary px-6 py-12 text-center text-[color:var(--primary-foreground)] sm:px-12">
           <Users className="mx-auto size-8 text-gold" />
-          <h2 className="mt-4 font-display text-3xl font-bold sm:text-4xl">Ready to simplify procurement?</h2>
+          <h2 className="mt-4 font-display text-3xl font-bold sm:text-4xl">
+            {isHi ? "खरीद प्रक्रिया को आसान बनाने के लिए तैयार हैं?" : "Ready to simplify procurement?"}
+          </h2>
           <p className="mx-auto mt-3 max-w-xl text-sm opacity-85">
-            Register your request, collect your token and arrive only when your slot is due.
+            {isHi
+              ? "अपना अनुरोध दर्ज करें, डिजिटल टोकन प्राप्त करें और केवल अपने निर्धारित समय पर केंद्र पहुंचें।"
+              : "Register your request, collect your token and arrive only when your slot is due."}
           </p>
           <Button asChild size="lg" variant="secondary" className="mt-7 h-13 px-8 text-base">
-            <Link to="/login/farmer">Get Started</Link>
+            <Link to="/login/farmer">{isHi ? "शुरू करें" : "Get Started"}</Link>
           </Button>
         </div>
       </Section>
