@@ -1,38 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Globe, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "./brand";
-
-const NAV = [
-  { to: "/", label: "Home" },
-  { to: "/how-it-works", label: "How It Works" },
-  { to: "/centres", label: "Procurement Centres" },
-  { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
-] as const;
+import { useTranslation } from "@/lib/kisansetu/language-context";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const [currentLang, setCurrentLang] = useState<"en" | "hi">("en");
+  const { language, setLanguage, t } = useTranslation();
+  const isHi = language === "hi";
 
-  useEffect(() => {
-    const hasHiCookie = document.cookie.includes("googtrans=/en/hi");
-    if (hasHiCookie) setCurrentLang("hi");
-  }, []);
+  const NAV = [
+    { to: "/", label: isHi ? "होम" : "Home" },
+    { to: "/how-it-works", label: isHi ? "प्रक्रिया समझें" : "How It Works" },
+    { to: "/centres", label: isHi ? "खरीद केंद्र" : "Procurement Centres" },
+    { to: "/about", label: isHi ? "परिचय" : "About" },
+    { to: "/contact", label: isHi ? "संपर्क" : "Contact" },
+  ] as const;
 
   const toggleLanguage = () => {
-    const nextLang = currentLang === "en" ? "hi" : "en";
-    setCurrentLang(nextLang);
-
-    if (nextLang === "hi") {
-      document.cookie = "googtrans=/en/hi; path=/; domain=" + window.location.hostname;
-      document.cookie = "googtrans=/en/hi; path=/;";
-    } else {
-      document.cookie = "googtrans=/en/en; path=/; domain=" + window.location.hostname;
-      document.cookie = "googtrans=/en/en; path=/;";
-    }
-    window.location.reload();
+    setLanguage(language === "en" ? "hi" : "en");
   };
 
   return (
@@ -53,23 +40,23 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="hidden items-center gap-2 lg:flex">
-          {/* Global Universal Hindi Toggle */}
+          {/* Direct Context Language Toggle Button */}
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={toggleLanguage}
-            className="flex items-center gap-1.5 rounded-full border border-primary/30 bg-secondary/80 px-3 font-semibold text-foreground hover:bg-secondary hover:text-primary cursor-pointer notranslate"
+            className="flex items-center gap-1.5 rounded-full border border-primary/30 bg-secondary/80 px-3.5 py-1.5 font-semibold text-foreground hover:bg-secondary hover:text-primary cursor-pointer"
           >
             <Globe className="size-4 text-primary" />
-            <span>{currentLang === "en" ? "हिंदी में देखें" : "View in English"}</span>
+            <span>{isHi ? "English" : "हिंदी"}</span>
           </Button>
 
           <Button asChild variant="outline">
-            <Link to="/login/farmer">Farmer Login</Link>
+            <Link to="/login/farmer">{isHi ? "किसान लॉगिन" : "Farmer Login"}</Link>
           </Button>
           <Button asChild>
-            <Link to="/login/officer">Officer Login</Link>
+            <Link to="/login/officer">{isHi ? "अधिकारी लॉगिन" : "Officer Login"}</Link>
           </Button>
         </div>
 
@@ -80,10 +67,10 @@ export function SiteHeader() {
             variant="outline"
             size="sm"
             onClick={toggleLanguage}
-            className="flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold notranslate"
+            className="flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold"
           >
             <Globe className="size-3.5 text-primary" />
-            <span>{currentLang === "en" ? "हिं" : "EN"}</span>
+            <span>{isHi ? "EN" : "हिं"}</span>
           </Button>
           <button
             type="button"
@@ -111,10 +98,10 @@ export function SiteHeader() {
             ))}
             <div className="mt-2 grid gap-2">
               <Button asChild variant="outline" size="lg" onClick={() => setOpen(false)}>
-                <Link to="/login/farmer">Farmer Login</Link>
+                <Link to="/login/farmer">{isHi ? "किसान लॉगिन" : "Farmer Login"}</Link>
               </Button>
               <Button asChild size="lg" onClick={() => setOpen(false)}>
-                <Link to="/login/officer">Officer Login</Link>
+                <Link to="/login/officer">{isHi ? "अधिकारी लॉगिन" : "Officer Login"}</Link>
               </Button>
             </div>
           </div>
@@ -125,46 +112,64 @@ export function SiteHeader() {
 }
 
 export function SiteFooter() {
+  const { language } = useTranslation();
+  const isHi = language === "hi";
+
   return (
     <footer className="mt-16 border-t border-border bg-primary text-[color:var(--primary-foreground)]">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-3">
         <div>
-          <p className="font-display text-xl font-bold">KISANSETU</p>
+          <p className="font-display text-xl font-bold">
+            {isHi ? "किसानसेतु" : "KISANSETU"}
+          </p>
           <p className="mt-2 max-w-sm text-sm opacity-80">
-            Connecting Farmers to Fair &amp; Transparent Procurement.
+            {isHi
+              ? "किसानों को निष्पक्ष और पारदर्शी खरीद व्यवस्था से जोड़ना।"
+              : "Connecting Farmers to Fair & Transparent Procurement."}
           </p>
         </div>
         <div className="text-sm">
-          <p className="font-semibold">For Farmers</p>
+          <p className="font-semibold">{isHi ? "किसानों के लिए" : "For Farmers"}</p>
           <ul className="mt-3 space-y-2 opacity-85">
             <li>
-              <Link to="/farmer/request">New Procurement Request</Link>
+              <Link to="/farmer/request">
+                {isHi ? "नया खरीद अनुरोध" : "New Procurement Request"}
+              </Link>
             </li>
             <li>
-              <Link to="/farmer/track">Track Procurement</Link>
+              <Link to="/farmer/track">
+                {isHi ? "खरीद स्थिति ट्रैक करें" : "Track Procurement"}
+              </Link>
             </li>
             <li>
-              <Link to="/farmer/schedule">Procurement Schedule</Link>
+              <Link to="/farmer/schedule">
+                {isHi ? "खरीद अनुसूची" : "Procurement Schedule"}
+              </Link>
             </li>
           </ul>
         </div>
         <div className="text-sm">
-          <p className="font-semibold">For Officers &amp; Admin</p>
+          <p className="font-semibold">
+            {isHi ? "अधिकारियों और व्यवस्थापक के लिए" : "For Officers & Admin"}
+          </p>
           <ul className="mt-3 space-y-2 opacity-85">
             <li>
-              <Link to="/officer">Officer Dashboard</Link>
+              <Link to="/officer">
+                {isHi ? "अधिकारी डैशबोर्ड" : "Officer Dashboard"}
+              </Link>
             </li>
             <li>
-              <a href="/admin">Admin Dashboard</a>
-            </li>
-            <li>
-              <Link to="/centres">Procurement Centres</Link>
+              <Link to="/centres">
+                {isHi ? "खरीद केंद्र" : "Procurement Centres"}
+              </Link>
             </li>
           </ul>
         </div>
       </div>
       <div className="border-t border-white/10 px-4 py-4 text-center text-xs opacity-70 sm:px-6">
-        Demo prototype built for Smart India Hackathon presentation. Data is stored locally in your browser.
+        {isHi
+          ? "स्मार्ट इंडिया हैकाथॉन प्रस्तुति के लिए निर्मित प्रोटोटाइप।"
+          : "Demo prototype built for Smart India Hackathon presentation."}
       </div>
     </footer>
   );
