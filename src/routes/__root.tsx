@@ -12,7 +12,6 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { KisansetuProvider } from "../lib/kisansetu/store";
-import { LanguageProvider } from "../lib/kisansetu/language-context";
 import { Toaster } from "../components/ui/sonner";
 
 function NotFoundComponent() {
@@ -87,26 +86,32 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "KISANSETU digitises farmer procurement with tokens, slots and live status tracking.",
       },
       { name: "author", content: "KISANSETU" },
-      { property: "og:title", content: "KISANSETU — Smart Farmer Procurement" },
-      {
-        property: "og:description",
-        content: "Connecting Farmers to Fair & Transparent Procurement.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Bitter:wght@400;600;700&family=Mukta:wght@400;500;600;700&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        children: `
+          function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+              pageLanguage: 'en',
+              includedLanguages: 'hi,en',
+              autoDisplay: false
+            }, 'google_translate_element');
+          }
+        `,
+      },
+      {
+        src: "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit",
+        async: true,
       },
     ],
   }),
@@ -121,8 +126,16 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <style>{`
+          /* Hide Google Translate toolbar bar & tooltips */
+          .goog-te-banner-frame.skiptranslate, .goog-te-gadget-icon, .goog-te-menu-value span:nth-child(3), .goog-te-menu-value span:nth-child(5) { display: none !important; }
+          body { top: 0px !important; }
+          #google_translate_element { display: none !important; }
+          .skiptranslate iframe { display: none !important; }
+        `}</style>
       </head>
       <body>
+        <div id="google_translate_element" style={{ display: "none" }}></div>
         {children}
         <Scripts />
       </body>
@@ -135,12 +148,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
-        <KisansetuProvider>
-          <Outlet />
-          <Toaster position="top-center" richColors />
-        </KisansetuProvider>
-      </LanguageProvider>
+      <KisansetuProvider>
+        <Outlet />
+        <Toaster position="top-center" richColors />
+      </KisansetuProvider>
     </QueryClientProvider>
   );
 }

@@ -17,6 +17,7 @@ import { PageHeading } from "@/components/kisansetu/app-shell";
 import { useKisansetu } from "@/lib/kisansetu/store";
 import { CROPS, SLOTS } from "@/lib/kisansetu/types";
 import { supabase } from "@/supabaseClient";
+import { useTranslation } from "@/lib/kisansetu/language-context";
 
 export const Route = createFileRoute("/farmer/request")({
   head: () => ({
@@ -41,9 +42,23 @@ const schema = z.object({
   slot: z.string().min(1),
 });
 
+const cropTranslations: Record<string, string> = {
+  Wheat: "गेहूं (Wheat)",
+  Paddy: "धान (Paddy)",
+  Mustard: "सरसों (Mustard)",
+  Gram: "चना (Gram)",
+  Maize: "मक्का (Maize)",
+  Bajra: "बाजरा (Bajra)",
+  Soybean: "सोयाबीन (Soybean)",
+  Cotton: "कपास (Cotton)",
+};
+
 function NewRequest() {
   const navigate = useNavigate();
   const { state, currentFarmer, createRequest } = useKisansetu();
+  const { language, t } = useTranslation();
+  const isHi = language === "hi";
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [crop, setCrop] = useState("Wheat");
@@ -53,8 +68,8 @@ function NewRequest() {
   return (
     <>
       <PageHeading
-        title="New Procurement Request"
-        description="Fill in the details below. Your token and time slot are generated immediately after submission."
+        title={t.formTitle}
+        description={t.formSubtitle}
       />
 
       <form
@@ -77,7 +92,7 @@ function NewRequest() {
             const next: Record<string, string> = {};
             for (const issue of parsed.error.issues) next[String(issue.path[0])] = issue.message;
             setErrors(next);
-            toast.error("Please correct the highlighted fields.");
+            toast.error(isHi ? "कृपया छूटे हुए या अमान्य विवरण ठीक करें।" : "Please correct the highlighted fields.");
             return;
           }
 
@@ -113,56 +128,67 @@ function NewRequest() {
               console.error("Supabase Error:", dbError);
               toast.error(`Database Warning: ${dbError.message}`);
             } else {
-              toast.success(`Request saved to Cloud DB! Token ${dynamicToken} generated.`);
+              toast.success(
+                isHi 
+                  ? `अनुरोध सफलतापूर्वक दर्ज हुआ! टोकन ${dynamicToken} जारी।` 
+                  : `Request saved to Cloud DB! Token ${dynamicToken} generated.`
+              );
             }
 
             navigate({ to: "/farmer/token/$token", params: { token: dynamicToken } });
           } catch (err) {
             console.error("Submission failed:", err);
-            toast.error("Failed to submit request. Check console for details.");
+            toast.error(isHi ? "अनुरोध दर्ज करने में विफल।" : "Failed to submit request.");
           } finally {
             setSubmitting(false);
           }
         }}
       >
         <div className="grid gap-5 sm:grid-cols-2">
+          {/* Farmer Name */}
           <div className="space-y-2">
-            <Label htmlFor="farmerName">Farmer name</Label>
+            <Label htmlFor="farmerName">{t.fieldFarmerName}</Label>
             <Input id="farmerName" name="farmerName" defaultValue={currentFarmer.name} className="h-12" maxLength={100} />
             {errors["farmerName"] ? <p className="text-xs text-destructive">{errors["farmerName"]}</p> : null}
           </div>
+
+          {/* Farmer ID */}
           <div className="space-y-2">
-            <Label htmlFor="farmerId">Farmer ID</Label>
+            <Label htmlFor="farmerId">{t.fieldFarmerId}</Label>
             <Input id="farmerId" name="farmerId" defaultValue={currentFarmer.farmerId} className="h-12" maxLength={20} />
             {errors["farmerId"] ? <p className="text-xs text-destructive">{errors["farmerId"]}</p> : null}
           </div>
 
+          {/* Crop Type */}
           <div className="space-y-2">
-            <Label>Crop type</Label>
+            <Label>{t.fieldCropType}</Label>
             <Select value={crop} onValueChange={setCrop}>
               <SelectTrigger className="h-12 w-full">
-                <SelectValue placeholder="Select crop" />
+                <SelectValue placeholder={isHi ? "फसल चुनें" : "Select crop"} />
               </SelectTrigger>
               <SelectContent>
                 {CROPS.map((c) => (
                   <SelectItem key={c} value={c}>
-                    {c}
+                    {isHi ? (cropTranslations[c] ?? c) : c}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
+
+          {/* Quantity */}
           <div className="space-y-2">
-            <Label htmlFor="quantity">Expected quantity (kg)</Label>
+            <Label htmlFor="quantity">{t.fieldQuantity}</Label>
             <Input id="quantity" name="quantity" inputMode="numeric" placeholder="250" className="h-12" />
             {errors["quantity"] ? <p className="text-xs text-destructive">{errors["quantity"]}</p> : null}
           </div>
 
+          {/* Procurement Centre */}
           <div className="space-y-2">
-            <Label>Procurement centre</Label>
+            <Label>{t.fieldCentre}</Label>
             <Select value={centre} onValueChange={setCentre}>
               <SelectTrigger className="h-12 w-full">
-                <SelectValue placeholder="Select centre" />
+                <SelectValue placeholder={isHi ? "खरीद केंद्र चुनें" : "Select centre"} />
               </SelectTrigger>
               <SelectContent>
                 {state.centres.map((c) => (
@@ -173,17 +199,20 @@ function NewRequest() {
               </SelectContent>
             </Select>
           </div>
+
+          {/* Preferred Date */}
           <div className="space-y-2">
-            <Label htmlFor="date">Preferred date</Label>
+            <Label htmlFor="date">{t.fieldPreferredDate}</Label>
             <Input id="date" name="date" type="date" defaultValue="2026-09-12" className="h-12" />
             {errors["date"] ? <p className="text-xs text-destructive">{errors["date"]}</p> : null}
           </div>
 
+          {/* Preferred Slot */}
           <div className="space-y-2">
-            <Label>Preferred slot</Label>
+            <Label>{t.fieldPreferredSlot}</Label>
             <Select value={slot} onValueChange={setSlot}>
               <SelectTrigger className="h-12 w-full">
-                <SelectValue placeholder="Select slot" />
+                <SelectValue placeholder={isHi ? "समय स्लॉट चुनें" : "Select slot"} />
               </SelectTrigger>
               <SelectContent>
                 {SLOTS.map((s) => (
@@ -194,21 +223,25 @@ function NewRequest() {
               </SelectContent>
             </Select>
           </div>
+
+          {/* Contact Number */}
           <div className="space-y-2">
-            <Label htmlFor="contact">Contact number</Label>
+            <Label htmlFor="contact">{t.fieldContactNumber}</Label>
             <Input id="contact" name="contact" defaultValue={currentFarmer.mobile} className="h-12" maxLength={10} />
             {errors["contact"] ? <p className="text-xs text-destructive">{errors["contact"]}</p> : null}
           </div>
         </div>
 
+        {/* Notice Info Box */}
         <div className="flex items-start gap-3 rounded-xl bg-secondary/70 p-4 text-sm text-muted-foreground">
           <CheckCircle2 className="mt-0.5 size-4.5 shrink-0 text-accent" />
-          After submission you will receive a unique token with a QR code and a confirmed arrival slot.
+          {t.formNotice}
         </div>
 
-        <Button type="submit" size="lg" className="h-13 w-full text-base sm:w-auto sm:px-10" disabled={submitting}>
-          {submitting ? <Loader2 className="size-5 animate-spin" /> : null}
-          {submitting ? "Submitting…" : "Submit Request"}
+        {/* Submit Button */}
+        <Button type="submit" size="lg" className="h-13 w-full text-base sm:w-auto sm:px-10 cursor-pointer" disabled={submitting}>
+          {submitting ? <Loader2 className="size-5 animate-spin mr-2" /> : null}
+          {submitting ? t.submitting : t.btnSubmitRequest}
         </Button>
       </form>
     </>

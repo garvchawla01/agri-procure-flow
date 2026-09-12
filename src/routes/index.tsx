@@ -170,16 +170,16 @@ function Home() {
               <Sprout className="size-3.5" /> {t.heroBadge}
             </span>
             <h1 className="mt-5 font-display text-4xl font-bold leading-tight text-primary sm:text-5xl">
-              {t.heroTitle1} {t.heroTitle2} {t.heroTitle3}
+              {t.heroTitle}
             </h1>
             <p className="mt-5 max-w-xl text-lg text-muted-foreground">
               {t.heroDesc}
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button asChild size="lg" className="h-13 text-base">
+              <Button asChild size="lg" className="h-13 text-base cursor-pointer">
                 <Link to="/farmer/request">{t.btnStartRequest}</Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="h-13 text-base">
+              <Button asChild size="lg" variant="outline" className="h-13 text-base cursor-pointer">
                 <Link to="/farmer/track">{t.btnTrackProcurement}</Link>
               </Button>
             </div>
@@ -206,11 +206,11 @@ function Home() {
             />
             <div className="card-soft absolute -bottom-6 left-4 hidden w-56 p-4 sm:block">
               <p className="text-xs font-medium text-muted-foreground">
-                {isHi ? "आपका टोकन" : "Your token"}
+                {t.yourToken}
               </p>
               <p className="font-display text-3xl font-bold text-primary">A104</p>
               <p className="mt-1 text-xs text-accent">
-                {isHi ? "स्लॉट सुबह 10:00 – 11:00" : "Slot 10:00 AM – 11:00 AM"}
+                {t.slotSample}
               </p>
             </div>
           </div>
@@ -329,8 +329,8 @@ function Home() {
               ? "अपना अनुरोध दर्ज करें, डिजिटल टोकन प्राप्त करें और केवल अपने निर्धारित समय पर केंद्र पहुंचें।"
               : "Register your request, collect your token and arrive only when your slot is due."}
           </p>
-          <Button asChild size="lg" variant="secondary" className="mt-7 h-13 px-8 text-base">
-            <Link to="/login/farmer">{isHi ? "शुरू करें" : "Get Started"}</Link>
+          <Button asChild size="lg" variant="secondary" className="mt-7 h-13 px-8 text-base cursor-pointer">
+            <Link to="/login/farmer">{t.getStarted}</Link>
           </Button>
         </div>
       </Section>
