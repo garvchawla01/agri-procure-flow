@@ -107,9 +107,9 @@ function Home() {
             </div>
             <div className="mt-8 grid max-w-md grid-cols-3 gap-4 text-center">
               {[
-                { k: "12,480", v: "Farmers served" },
-                { k: "36", v: "Procurement centres" },
-                { k: "71%", v: "Less waiting" },
+                { k: "650", v: "Farmers served" },
+                { k: "4", v: "Procurement centres" },
+                { k: "85%", v: "Less waiting" },
               ].map((s) => (
                 <div key={s.v}>
                   <p className="font-display text-xl font-bold text-accent">{s.k}</p>
